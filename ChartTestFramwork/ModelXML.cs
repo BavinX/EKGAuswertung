@@ -6,15 +6,11 @@ namespace ChartTestFramwork
 {
     internal class ModelXML : IModelLocalData
     {
-        // XML-Dokument im Arbeitsspeicher
-        private XDocument doc;
-
-        // Dateiname mit Datum, z. B. EKG_261124.xml
-        private string dateiname;
-
-        private IViewECG viewECG;
-        private IModelECGDevice modelECGDevice;
-        private IControllerECG controllerECG;
+        XDocument doc;
+        string dateiname;
+        IViewECG viewECG;
+        IModelECGDevice modelECGDevice;
+        IControllerECG controllerECG;
 
         IViewECG IModelLocalData.ViewEKG { set => viewECG = value; }
         IModelECGDevice IModelLocalData.ModelECGDevice { set => modelECGDevice = value; }
@@ -22,26 +18,22 @@ namespace ChartTestFramwork
 
         public ModelXML()
         {
+            //dateiname mit datum, damit jeden tag ne neue datei kommt
             dateiname = "EKG_" + DateTime.Now.ToString("yyMMdd") + ".xml";
-            doc = new XDocument(new XElement("EKG"));
+            doc = new XDocument(new XElement("EKG")); //wurzel elment
         }
 
         void IModelLocalData.saveLiveData(ECGValue aktuellerWert)
         {
-            // <Messwert Zeitstempel="17">128</Messwert>
-            XElement messwert = new XElement("Messwert",
-                new XAttribute("Zeitstempel", aktuellerWert.TimeStamp),
-                aktuellerWert.Value);
-
-            doc.Element("EKG").Add(messwert);
-            doc.Save(dateiname);
+            //neuen messwert mit zeitstemepl als atribut anhängen
+            doc.Element("EKG").Add(new XElement("Messwert", new XAttribute("Zeitstempel", aktuellerWert.TimeStamp), aktuellerWert.Value));
+            doc.Save(dateiname); //speichern
         }
 
         List<double> IModelLocalData.get24hData()
         {
             throw new NotImplementedException();
         }
-
         void IModelLocalData.set24hData(ECGValue aktuellerWert)
         {
             throw new NotImplementedException();
