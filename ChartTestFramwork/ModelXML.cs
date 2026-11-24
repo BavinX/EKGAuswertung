@@ -18,14 +18,14 @@ namespace ChartTestFramwork
 
         public ModelXML()
         {
-            //dateiname mit datum, damit jeden tag ne neue datei kommt
+            //dateiname mit datum, damit jeden tag eine neue datei kommt
             dateiname = "EKG_" + DateTime.Now.ToString("yyMMdd") + ".xml";
-            doc = new XDocument(new XElement("EKG")); //wurzel elment
+            doc = new XDocument(new XElement("EKG")); //wurzel element
         }
 
         void IModelLocalData.saveLiveData(ECGValue aktuellerWert)
         {
-            //neuen messwert mit zeitstemepl als atribut anhängen
+            //neuen messwert mit zeitstemepl als attribut anhängen
             doc.Element("EKG").Add(new XElement("Messwert", new XAttribute("Zeitstempel", aktuellerWert.TimeStamp), aktuellerWert.Value));
             doc.Save(dateiname); //speichern
         }
